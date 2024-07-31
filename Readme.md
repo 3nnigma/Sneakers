@@ -1,0 +1,1 @@
+My first full project in React with TS, Django with DRF, PostgreSQL as db and docker, project is not very optimal, but I don't want to continue it. 

@@ -1,0 +1,44 @@
+header {
+  @apply w-full h-20 flex justify-between;
+  border-bottom: solid #383f47 1px;
+}
+
+.logo {
+  @apply flex text-left;
+
+  a {
+    @apply text-white;
+
+    &:hover {
+      @apply text-white;
+    }
+  }
+
+  h3 {
+    @apply uppercase;
+  }
+
+  span {
+    @apply text-gray-300 opacity-75;
+  }
+
+  img {
+    @apply w-14 h-14 p-2 mr-4 text-5xl flex cursor-pointer justify-center items-center rounded-full;
+    background: linear-gradient(45deg, #747bff, #535bf2);
+    rotate: -20deg;
+    box-shadow: 0 0 5px #747bff;
+  }
+}
+
+.icons {
+  @apply flex mr-2 pb-8;
+
+  div,
+  a {
+    @apply m-2 items-center flex cursor-pointer text-white font-normal;
+  }
+
+  svg {
+    @apply w-8 h-8 mx-2;
+  }
+}
