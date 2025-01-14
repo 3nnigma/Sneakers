@@ -7,15 +7,28 @@ import { SneakersService } from "../services/Sneakers.service";
 //     select: ({ data }) => data,
 //   });
 // };
-
-export const useSneakers = (sortState: 0 | 1 | 2) => {
+export const useSneakers = (sortState: 0 | 1 | 2, page: number) => {
   const ordering = sortState === 1 ? 'price' : sortState === 0 ? '-price' : '';
-  return useQuery(["sneakers", ordering], () => SneakersService.getAll(ordering), {
-    select: ({ data }) => data,
-    keepPreviousData: true,
-  });
+  return useQuery(
+    ['sneakers', ordering, page],
+    () => SneakersService.getAll(ordering, page),
+    {
+      select: ({ data }) => data,
+      keepPreviousData: true,
+    }
+  );
 };
 
+export const useSneakersWithoutPagination = (ordering: string = '') => {
+  return useQuery(
+    ['sneakers', ordering],
+    () => SneakersService.getAllWithoutPagination(ordering),
+    {
+      select: ({ data }) => data,
+      keepPreviousData: true,
+    }
+  );
+};
 
 export const useAddCart = () => {
   return useMutation((data: ICart) => SneakersService.addCart(data));

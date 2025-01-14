@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CartService } from "../services/Cart.service";
-import { ICart } from "../components/Cart/cart.interface";
 import { useEffect } from "react";
+import { ICart } from "../components/Cart/cart.interface";
 import { IRegister } from "../components/screens/user/auth/auth.interface";
+import { CartService } from "../services/Cart.service";
 
 export const useGetCarts = (user: IRegister | undefined) => {
   const queryClient = useQueryClient();
@@ -27,9 +27,9 @@ export const useGetCarts = (user: IRegister | undefined) => {
   });
 };
 
-export const useClearCart = () => {
+export const useClearCart = (userId: number) => {
   const queryClient = useQueryClient();
-  return useMutation((id: number | undefined) => CartService.delCart(id), {
+  return useMutation(() => CartService.clearCart(userId), {
     onSuccess: () => {
       queryClient.invalidateQueries(["cart"]);
     },

@@ -1,24 +1,12 @@
 
 from rest_framework import serializers
 
-from .models import Card, Cart, Gender, Sneakers, Transaction, User
+from .models import Cart, Gender, Sneakers, User
 
 
 class SneakersSerializer(serializers.ModelSerializer):
   class Meta:
     model = Sneakers
-    fields = '__all__'
-
-
-class TransactionSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Transaction
-    fields = '__all__'
-
-
-class CardSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = Card
     fields = '__all__'
 
 

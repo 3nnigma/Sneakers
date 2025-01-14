@@ -8,29 +8,31 @@
 }
 
 :root {
-  // color-scheme: dark;
+  color-scheme: dark;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-image: linear-gradient(to bottom, #1a1c3cc2, #1a1c3459);
-  padding: 50px 80px;
+  padding: 60px 220px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+  min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-body {
-  min-height: 86vh;
-  @apply rounded-lg;
 
+body {
+  @apply rounded-lg;
   background-color: #242424;
+  min-height: 88vh;
 }
+
 #root {
   margin: 0 auto;
   padding: 2rem;
-  min-height: 86vh;
+  min-height: 88vh;
 }
 
 a {
@@ -38,6 +40,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   @apply text-purple-high;
 }
@@ -59,6 +62,7 @@ button {
   box-shadow: 0 0 3px #646cff;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
@@ -69,6 +73,7 @@ button:hover {
 
 .done {
   background-color: rgb(74, 202, 34);
+
   &:hover {
     background-color: rgb(74, 185, 40);
     opacity: 0.95 !important;

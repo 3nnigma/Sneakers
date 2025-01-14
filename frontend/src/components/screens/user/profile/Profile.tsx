@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { IRegister } from "../auth/auth.interface";
-import useUserProvider from "../../../../hooks/useUserProvider";
 import { useLogout } from "../../../../hooks/useUser";
-import styles from "./Profile.module.scss";
+import useUserProvider from "../../../../hooks/useUserProvider";
+import { IRegister } from "../auth/auth.interface";
+import styles from "./Profile.module.css";
 
 const Profile: FC = () => {
   const { user, setUser } = useUserProvider();
@@ -24,7 +24,7 @@ const Profile: FC = () => {
         <i>Name</i>: {user?.first_name} {user?.last_name}
       </h3>
 
-      <button onClick={() => logout(user)}>Выйти из аккаунта</button>
+      <button onClick={() => logout(user)}>Logout</button>
     </div>
   );
 };

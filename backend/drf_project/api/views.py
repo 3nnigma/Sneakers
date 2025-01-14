@@ -6,13 +6,16 @@ from django.forms import ValidationError
 from django.http import JsonResponse
 from rest_framework import viewsets, generics
 from rest_framework.views import APIView
+import stripe
 from drf_project.settings import SECRET_KEY
+from django.conf import settings
 from rest_framework import status
-from .models import Gender, Sneakers, Transaction, User, Cart, Card
-from .serializers import CardSerializer, GenderSerializer, SneakersSerializer, TransactionSerializer, UserSerializer
+from .models import Gender, Sneakers, User, Cart
+from .serializers import GenderSerializer, SneakersSerializer, UserSerializer
 from rest_framework.filters import OrderingFilter
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.pagination import PageNumberPagination
 import jwt
 from datetime import datetime, timedelta
 from .serializers import CartSerializer
@@ -23,22 +26,31 @@ class GenderView(generics.ListCreateAPIView, generics.RetrieveDestroyAPIView):
   serializer_class = GenderSerializer
 
 
+class SneakersPagination(PageNumberPagination):
+    page_size = 12
+    page_size_query_param = 'page_size' 
+    max_page_size = 40 
+
 class SneakersView(viewsets.ModelViewSet):
-  queryset = Sneakers.objects.all()
-  serializer_class = SneakersSerializer
-  filter_backends = [OrderingFilter]
-  ordering_fields = ['price']
+    queryset = Sneakers.objects.all()
+    serializer_class = SneakersSerializer
+    pagination_class = SneakersPagination  # По умолчанию пагинация включена
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['price']
 
+    def get_queryset(self):
+        # Получаем запрос с параметрами
+        queryset = super().get_queryset()
 
-class TransactionView(viewsets.ModelViewSet):
-  queryset = Transaction.objects.all()
-  serializer_class = TransactionSerializer
+        # Получаем параметр no_pagination
+        no_pagination = self.request.query_params.get('no_pagination', False)
 
+        # Если параметр no_pagination = True, отключаем пагинацию
+        if no_pagination:
+            self.pagination_class = None  # Отключаем пагинацию
+            return queryset
 
-class CardView(viewsets.ModelViewSet):
-  queryset = Card.objects.all()
-  serializer_class = CardSerializer
-
+        return queryset
 
 class RegisterView(viewsets.ModelViewSet):
   queryset = User.objects.all()
@@ -224,3 +236,37 @@ class CartCreateView(generics.CreateAPIView, generics.RetrieveDestroyAPIView):
 class CartDetail(generics.RetrieveUpdateDestroyAPIView):
   queryset = Cart.objects.all()
   serializer_class = CartSerializer
+
+class ClearCart(APIView):
+  def delete(self, request):
+      user_id = request.data.get("user_id")
+      Cart.objects.filter(user=user_id).delete()
+      return Response({"message": "Корзина очищена!"}, status=status.HTTP_204_NO_CONTENT)
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+class PaymentIntentView(APIView):
+    def post(self, request):
+        try:
+            amount = request.data.get('amount')
+            amount_in_cents = int(float(amount) * 100)
+
+            session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=[{
+                    'price_data': {
+                        'currency': 'usd',
+                        'product_data': {
+                            'name': 'Account Top-up',
+                        },
+                        'unit_amount': amount_in_cents,
+                    },
+                    'quantity': 1,
+                }],
+                mode='payment',
+                success_url=f'http://localhost:3000/payment/success',
+                cancel_url=f'http://localhost:3000/',
+            )
+            return Response({'url': session.url}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

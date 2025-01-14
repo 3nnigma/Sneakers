@@ -44,23 +44,6 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-class Card(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    card_number = models.CharField(max_length=16)
-    expiration_date = models.DateField()
-    cvv = models.CharField(max_length=3)
-
-    def __str__(self):
-        return f"Card ending in {self.card_number[-4:]}"
-    
-class Transaction(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    description = models.TextField()
-
-    def __str__(self):
-        return f"{self.user.username} - {self.amount} - {self.timestamp}"
 
 class Sneakers(models.Model):
     title = models.CharField(max_length=255)

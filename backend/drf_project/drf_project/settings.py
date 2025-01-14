@@ -2,18 +2,23 @@
 
 from datetime import timedelta
 from pathlib import Path
-
-import os
+import dotenv
+from django.core.management.utils import get_random_secret_key
+from os import getenv, path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+dotenv_file = BASE_DIR / '.env'
+
+if path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-4(y+*qa93=lu4#*9!z5$x#%_+g$7mx+a2&$e!kc75l6ydqs01+'
+SECRET_KEY = getenv('DJANGO_SECRET_KEY', get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -46,7 +51,8 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-
+    'PAGE_SIZE': 12,  
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
     ],
@@ -56,7 +62,7 @@ REST_FRAMEWORK = {
     ),
 
 }
-
+STRIPE_SECRET_KEY = getenv("STRIPE_SECRET_KEY")
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
@@ -91,7 +97,7 @@ DATABASES = {
         'NAME': 'mdb',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
-        'HOST': 'db',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }

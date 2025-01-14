@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Cards from "./Cards/Cards";
-import styles from "./Shop.module.scss";
+import styles from "./Shop.module.css";
 
 
 const Shop = () => {
@@ -19,16 +19,29 @@ const Shop = () => {
   return (
     <div className={styles.shop}>
       <div style={{ display: "flex", alignItems: "center" }}>
-        <h2>Все кроссовки</h2>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <select defaultValue="default" onChange={handleSortChange}>
-            <option value="default" >Sort by</option>
+        <h2 className="ml-3">All Sneakers</h2>
+        <form onSubmit={(e) => e.preventDefault()} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingLeft: '15px', borderLeft: "solid 1px gray" }}>
+          <label htmlFor="sort-select" style={{ marginRight: '10px', fontSize: '16px' }}>Sort by:</label>
+          <select
+            id="sort-select"
+            defaultValue="default"
+            onChange={handleSortChange}
+            style={{
+              padding: '6px 12px',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+              fontSize: '14px',
+              cursor: 'pointer'
+            }}
+          >
+            <option value="default">Select sorting option</option>
             <option value="ascending">Ascending</option>
             <option value="descending">Descending</option>
           </select>
         </form>
       </div>
       <Cards sortState={sort} />
+
     </div>
   );
 };

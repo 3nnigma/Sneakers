@@ -6,8 +6,8 @@
 
 .cardItem {
   @apply rounded-lg p-2 pr-2 pl-4 relative m-6 cursor-pointer transition-all;
-  width: 300px;
-  height: 375px;
+  width: 340px;
+  height: 422.5px;
   background-color: rgba(24, 24, 27, 0.4);
   border: 1px solid #30363d;
 
@@ -16,14 +16,14 @@
     transform: translateZ(7.5px);
   }
 
-  div {
+  .sneakerImage {
     width: 100%;
     height: 43%;
     background: no-repeat center / cover;
   }
 
   h3 {
-    @apply mt-8;
+    @apply mt-8 mb-2;
   }
 
   p {
@@ -33,14 +33,14 @@
 
   span {
     line-height: 1.2;
-    @apply text-gray-400;
+    @apply text-gray-400 text-lg;
 
     b {
-      @apply block text-white;
+      @apply text-white ml-2;
     }
   }
 
   svg {
-    @apply w-9 h-9 absolute rounded-md bottom-9 right-9 transition-opacity cursor-pointer p-2 hover:opacity-75;
+    @apply w-9 h-9 rounded-md transition-opacity cursor-pointer p-2 hover:opacity-75;
   }
 }

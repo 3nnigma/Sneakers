@@ -1,31 +1,33 @@
-import { FC, Key, useEffect, useState } from "react";
-import styles from "./Cart.module.scss";
+import { FC, Key, useEffect } from "react";
+import styles from "./Cart.module.css";
 import CartItem from "./CartItem";
 
+import axios from "axios";
 import { Minimize } from "lucide-react";
 import { useClearCart, useGetCarts } from "../../hooks/useCart";
 import useProvider from "../../hooks/useProvider";
-import { useSneakers } from "../../hooks/useSneakers";
-import { useBalance } from "../../hooks/useUser.ts";
+import { useSneakersWithoutPagination } from "../../hooks/useSneakers";
 import useUserProvider from "../../hooks/useUserProvider.tsx";
+import { useCart } from "../../providers/PriceProvider.tsx";
 import { ICart } from "./cart.interface.ts";
 
 const Cart: FC<ICart[]> = () => {
   const { isOpen, setIsOpen } = useProvider();
-  const { data: sneakers } = useSneakers();
+  const { data: sneakers } = useSneakersWithoutPagination();
   const { user } = useUserProvider();
-  const { mutate: clearMutate } = useClearCart();
+  const { mutate: clearMutate } = useClearCart(user.id);
   const { data: carts } = useGetCarts(user);
-  const { mutate: balanceMutate } = useBalance();
-  const [total, setTotal] = useState<number>(0) as [
-    number,
-    React.Dispatch<React.SetStateAction<number>>
-  ];
+  // const [total, setTotal] = useState<number>(0) as [
+  //   number,
+  //   React.Dispatch<React.SetStateAction<number>>
+  // ];
 
   let arrID: (number | undefined)[] = [];
 
+  const { totalPrice, setTotalPrice } = useCart();
+
   useEffect(() => {
-    let totalPrice = 0;
+    let total = 0;
 
     carts?.forEach((cart: ICart) => {
       const filteredSneaker = sneakers?.find(
@@ -33,21 +35,26 @@ const Cart: FC<ICart[]> = () => {
       );
 
       if (filteredSneaker) {
-        totalPrice += cart.quantity * filteredSneaker.price;
+        total += cart.quantity * filteredSneaker.price;
       }
     });
 
-    setTotal(totalPrice);
-  }, [carts, sneakers]);
-  const bal = user?.balance;
-  const calcBalance = (): number | undefined => {
-    if (bal !== undefined) {
-      return bal - total;
+    setTotalPrice(total);
+  }, [carts, sneakers, setTotalPrice]);
+
+
+  const clearAllCart = async () => {
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/create-stripe-session/`,
+        { amount: totalPrice },
+      );
+      const { url } = response.data;
+      window.location.href = url;
+    } catch (error) {
+      console.error("Error creating Stripe session", error);
     }
-  };
-  const clearAllCart = (arr: (number | undefined)[]) => {
-    arr.map((id) => clearMutate(id));
-    alert("Ваш заказ прошёл успешно!");
+    clearMutate();
   };
 
   return (
@@ -65,7 +72,7 @@ const Cart: FC<ICart[]> = () => {
             onClick={() => setIsOpen(!isOpen)}
           />
           <div className={styles.cart}>
-            <h2>Корзина</h2>
+            <h2>Cart</h2>
             {carts?.map((cart: ICart, index: Key) => {
               arrID.push(cart.id);
               const filteredSneaker = sneakers?.find(
@@ -80,27 +87,19 @@ const Cart: FC<ICart[]> = () => {
             })}
             <div className={styles.control}>
               <div>
-                <span>Итого:</span>
-                <b>{total} руб.</b>
+                <span>Total:</span>
+                <b>${totalPrice.toFixed(2)}</b>
               </div>
               <div>
-                <span>Налог 3%:</span>
-                <b>{Math.floor((total / 100) * 3)} руб.</b>
+                <span>Tax 3%:</span>
+                <b>${(totalPrice / 100 * 3).toFixed(2)}</b>
               </div>
               <button
                 onClick={() => {
-                  const balance = calcBalance();
-                  clearAllCart(arrID);
-                  if (
-                    balance !== undefined &&
-                    bal !== undefined &&
-                    bal >= total
-                  ) {
-                    balanceMutate(balance);
-                  }
+                  clearAllCart();
                 }}
               >
-                Оформить заказ
+                Place an order
               </button>
             </div>
           </div>

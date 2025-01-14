@@ -15,7 +15,10 @@ header {
   }
 
   h3 {
-    @apply uppercase;
+    font-family: 'Courier New', Courier, monospace;
+    padding-top: 2px;
+    letter-spacing: 1.1px;
+    line-height: 25px;
   }
 
   span {

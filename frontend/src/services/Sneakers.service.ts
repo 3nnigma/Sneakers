@@ -3,8 +3,14 @@ import { ICart } from "../components/Cart/cart.interface";
 import { ISneakers } from "../components/screens/Home/Shop/Cards/card.interface";
 
 export const SneakersService = {
-  async getAll(ordering: string = '') {
-    return axios.get<ISneakers[]>(`http://127.0.0.1:8000/sneakers/?ordering=${ordering}`, {
+  async getAll(ordering: string = '', page: number = 1) {
+    return axios.get<ISneakers[]>(`http://127.0.0.1:8000/sneakers/?ordering=${ordering}&page=${page}`, {
+      withCredentials: true,
+    });
+  },
+
+  async getAllWithoutPagination(ordering: string = '') {
+    return axios.get<ISneakers[]>(`http://127.0.0.1:8000/sneakers/?ordering=${ordering}&no_pagination=true`, {
       withCredentials: true,
     });
   },

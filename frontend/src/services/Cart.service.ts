@@ -13,9 +13,16 @@ export const CartService = {
     }
     return {};
   },
+  async clearCart(userId: number) {
+    return axios.delete('http://127.0.0.1:8000/api/cart/clear/', {
+      data: { user_id: userId },
+      withCredentials: true,
+    });
+  },
+
   async delCart(id: number | undefined) {
     return axios.delete<ICart>(`http://127.0.0.1:8000/api/cart/${id}/`, {
       withCredentials: true,
     });
-  },
+  }
 };

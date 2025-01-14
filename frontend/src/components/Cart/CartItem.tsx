@@ -2,7 +2,7 @@ import { Trash2 } from "lucide-react";
 import { FC } from "react";
 import { useDelCart, useQuantity } from "../../hooks/useSneakers";
 import { ISneakerItem } from "../screens/Home/Shop/Cards/card.interface";
-import styles from "./Cart.module.scss";
+import styles from "./Cart.module.css";
 import { ICartItem } from "./cart.interface";
 
 const CartItem: FC<ICartItem & ISneakerItem> = ({ cart, sneaker }) => {
@@ -25,7 +25,7 @@ const CartItem: FC<ICartItem & ISneakerItem> = ({ cart, sneaker }) => {
       ></div>
       <div className={styles.cartInfo}>
         <span>{sneaker?.title}</span>
-        <b>{sneaker?.price} руб.</b>
+        <b>${sneaker?.price}</b>
       </div>
       <div className={styles.quantity}>
         <input

@@ -1,0 +1,27 @@
+.login {
+  @apply mt-12 w-full h-full flex justify-center items-center;
+
+  span {
+    @apply mt-16;
+  }
+
+  form {
+    @apply w-72 block pt-8 text-center;
+
+    input {
+      @apply p-3 my-1.5 w-full;
+    }
+
+    button {
+      @apply mt-3 px-12 py-2;
+    }
+  }
+}
+
+.authForm {
+  @apply rounded-lg p-2 pr-2 pl-4 m-6 flex justify-center items-center flex-col;
+  width: 400px;
+  height: 520px;
+  background-color: rgba(24, 24, 27, 0.4);
+  border: 1px solid #30363d;
+}
